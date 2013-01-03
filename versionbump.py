@@ -14,8 +14,8 @@ import xmlrpclib
 import setup_development
 
 here = setup_development.here
-REPOSITORY_URL = 'git@github.com:mihnea/mozbase.git'
-REPOSITORY_PULL_URL = 'git://github.com/mihnea/mozbase.git'
+REPOSITORY_URL = 'git@github.com:mozilla/mozbase.git'
+REPOSITORY_PULL_URL = 'git://github.com/mozilla/mozbase.git'
 
 class CalledProcessError(Exception):
     """error for bad calls"""
@@ -44,7 +44,7 @@ class VersionBump(object):
             return wrapped
 
     def __init__(self, args, commit_message, diff, dry_run, git_path, info,
-                 pypi_versions, strict):
+                 pypi_versions, strict, tag_only):
         self.args = args
         self.commit_message = commit_message
         self.dependencies = None
@@ -57,6 +57,7 @@ class VersionBump(object):
         self.info = info
         self.pypi_versions = pypi_versions
         self.strict = strict
+        self.tag_only = tag_only
         self.to_do = None
         self.versions = None
 
@@ -376,6 +377,8 @@ class VersionBump(object):
             self.to_do += ['write_diff']
         if self.pypi_versions:
             self.to_do = ['print_pypi_versions']
+        if self.tag_only:
+            self.to_do = ['tag', 'quit']
 
         if 'quit' not in self.to_do:
             self.to_do += full_run
@@ -409,6 +412,9 @@ def main(args=sys.argv[1:]):
     parser.add_option('--pypi', dest='pypi_versions',
                       action='store_true', default=False,
                       help="display in-tree package versions and versions on pypi")
+    parser.add_option('--tag-only', dest='tag_only',
+                      action='store_true', default=False,
+                      help="only tag the version(s) and quit")
     options, args = parser.parse_args()
     data = vars(options)
     data['args'] = args
