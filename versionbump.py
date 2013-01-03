@@ -372,11 +372,11 @@ class VersionBump(object):
 
         self.to_do = []
         if self.info:
-            self.to_do += ['print_pkgs_info', 'quit']
+            self.to_do = ['print_pkgs_info', 'quit']
         if self.diff:
-            self.to_do += ['write_diff']
+            self.to_do = ['write_diff', 'quit']
         if self.pypi_versions:
-            self.to_do = ['print_pypi_versions']
+            self.to_do = ['print_pypi_versions', 'quit']
         if self.tag_only:
             self.to_do = ['tag', 'quit']
 
@@ -401,7 +401,7 @@ def main(args=sys.argv[1:]):
                       action='store_true', default=False,
                       help="don't make changes, just display what will be run")
     parser.add_option('--diff', dest='diff',
-                      help="output the diff to this file ('-' for stdout)")
+                      help="output the diff to this file ('-' for stdout) and exit")
     parser.add_option('-m', '--message', dest='commit_message',
                       help="commit message")
     parser.add_option('--strict', dest='strict',
@@ -411,7 +411,7 @@ def main(args=sys.argv[1:]):
                       help='git binary to use')
     parser.add_option('--pypi', dest='pypi_versions',
                       action='store_true', default=False,
-                      help="display in-tree package versions and versions on pypi")
+                      help="display in-tree package versions and versions on pypi and exit")
     parser.add_option('--tag-only', dest='tag_only',
                       action='store_true', default=False,
                       help="only tag the version(s) and quit")
